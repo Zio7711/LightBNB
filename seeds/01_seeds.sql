@@ -1,8 +1,8 @@
-DELETE FROM users;
-ALTER SEQUENCE users_id_seq RESTART WITH 1;
-ALTER SEQUENCE properties_id_seq RESTART WITH 1;
-ALTER SEQUENCE reservations_id_seq RESTART WITH 1;
-ALTER SEQUENCE property_reviews_id_seq RESTART WITH 1;
+DELETE FROM users IF EXISTS;
+ALTER SEQUENCE users_id_seq RESTART WITH 1 IF EXISTS;
+ALTER SEQUENCE properties_id_seq RESTART WITH 1 IF EXISTS;
+ALTER SEQUENCE reservations_id_seq RESTART WITH 1 IF EXISTS;
+ALTER SEQUENCE property_reviews_id_seq RESTART WITH 1 IF EXISTS;
 
 INSERT INTO users (name, email, password)
 VALUES ('Zio', 'zio@1.com', '$2a$10$FB'),
