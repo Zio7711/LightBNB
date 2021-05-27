@@ -78,7 +78,8 @@ const addUser =  function(user) {
       RETURNING *`, [user.name, user.email, user.password]
     )
     .then((result) => {
-      return result.rows;
+      // console.log(result.rows);
+      return result.rows
     })
     .catch((error) = {
       if (error) {
@@ -187,17 +188,6 @@ const getAllProperties = (options, limit = 10) => {
     .catch((err) => {
       console.log(err.message);
     });
-
-
-/*    return pool
-    .query(`SELECT * FROM properties LIMIT $1`, [limit])
-    .then((result) => {
-      // console.log(result.rows);
-      return result.rows;
-    })
-    .catch((err) => {
-      console.log(err.message);
-    }); */
 };
 exports.getAllProperties = getAllProperties;
 
@@ -208,9 +198,23 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+  const queryParams = [property.owner_id, property.title, property.description, property.thumbnail_photo_url, property.cover_photo_url, property.cost_per_night, property.street, property.city, property.province, property.post_code, property.country, parseFloat(property.parking_spaces), parseFloat(property.number_of_bathrooms), parseFloat(property.number_of_bedrooms)];
+  
+  let queryString = `
+  INSERT INTO properties(owner_id, title, description, thumbnail_photo_url, cover_photo_url, cost_per_night, street, city, province, post_code, country, parking_spaces, number_of_bathrooms, number_of_bedrooms)
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  RETURNING *;
+  `
+  console.log(queryString, queryParams);
+
+  return pool
+    .query(queryString, queryParams)
+    .then((res) => {
+      console.log(res.rows);
+      return res.rows;
+    })
+    .catch(err => {
+      return console.log('query error:', err);
+    })
 }
 exports.addProperty = addProperty;
